@@ -5,6 +5,13 @@ from tkinter import ttk
 # Classes
 from screens.screen_game import Game
 
+#Test code for SK
+from utils.audio import sounds
+sounds().play_audio("./assets/sfx/ashcroft_targets.wav", delay=1)
+sounds().play_audio("./assets/bgm/bushw_conquer.wav", delay=0)
+sounds().play_audio("./assets/bgm/bushw_conquer.wav", delay=0)
+#End of SK test code
+
 # Main Loop. See https://www.geeksforgeeks.org/python-main-function/
 def main():
     # Setting up the window
