@@ -9,8 +9,8 @@ class GameObjectType(Enum):
     NONE = 0,
     PLAYER = 1,
     STAR = 2,
-    WALL = 3,
-    SPIKE = 4
+    SPACESHIP = 3,
+    WALL = 4
 
 class GameObject_Base():
     def __init__(self, go_type: GameObjectType, canvas: tk.Canvas, position = Vector2(), size = Vector2(25, 25)):
@@ -39,8 +39,12 @@ class GameObject_Base():
     Utility function to size up/down image to desired size, used for draw function.
     We only scale based on width to maintain the original image ratio
     """
-    def scale_image(self, image: tk.PhotoImage, size_x: int) -> tk.PhotoImage:
-        scale = size_x / image.width()
+    def scale_image(self, image: tk.PhotoImage, desired_size: int, is_scale_by_x: bool = True) -> tk.PhotoImage:
+        if is_scale_by_x: # Scale by width
+            scale = desired_size / image.width()
+        else: # Scale by height
+            scale = desired_size / image.height()
+            
         if scale < 1: # scale down
             scale = int(1/scale) # convert to how much to scale down (ie 0.5 -> scale down by 2x)
             return image.subsample(scale, scale) # scale down image and set as new image

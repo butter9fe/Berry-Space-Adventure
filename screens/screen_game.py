@@ -2,10 +2,13 @@
 # Modules
 import tkinter as tk
 import random as r
+
 # Classes
 from gameobjects.gameobject_base import GameObject_Base
 from gameobjects.gameobject_player import Player
 from gameobjects.gameobject_star import Star
+from gameobjects.gameobject_spaceship import Spaceship
+
 from utils.timer import Timer
 from utils.vector2 import Vector2
 from constants import *
@@ -15,7 +18,10 @@ from utils.soundthreadmanager import sound_thread
 
 class Game(tk.Canvas):
     def __init__(self, parent):
-        global bg_img # Required so GC doesn't delete the image due to no references
+        # Global image references so GC doesn't delete them due to nothing referencing them
+        global bg_img
+        global go_images
+        go_images = []
 
         # Initialise variables
         screen_size = Vector2(parent.winfo_screenwidth(), parent.winfo_screenheight()) # Obtain size of root window
@@ -34,17 +40,14 @@ class Game(tk.Canvas):
         bg_img = tk.PhotoImage(file='./assets/spaceBG.png')
         self.bg = self.create_image(0, 0, image=bg_img, anchor='nw')
 
+        # Create ships
+        self.game_objects.append(Spaceship(self, self.canvas_size.y - Spaceship.SHIP_HEIGHT, True, go_images)) # Beginning ship
 
         # Create path from player to mouse, initialised to 0 first
         self.path = self.create_line(0, 0, 0, 0, fill="white", width=5)
 
         # Create player
-        self.player = Player(self, self.canvas_size.x * 0.5, self.canvas_size.y * 0.9)
-
-        # Create stars
-        global star_images # Required so GC doesn't delete the images due to no references
-        star_images = []
-        #self.spawn_stars()
+        self.player = Player(self, self.canvas_size.x * 0.5, self.canvas_size.y * 0.95)
 
         # Begin update loop
         # Only after all objects have been created
@@ -195,7 +198,7 @@ class Game(tk.Canvas):
             pos = self.get_random_pos(spawn_top_bound, spawn_bot_bound, Star.STAR_SIZE * 2)
             if (pos == None):
                 return
-            star = Star(self, pos.x, pos.y, star_images)
+            star = Star(self, pos.x, pos.y, go_images)
             self.game_objects.append(star)
             self.active_star_count += 1
     # endregion

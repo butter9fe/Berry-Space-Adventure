@@ -34,6 +34,13 @@ class Player(GameObject_Physics_Base):
                 # Else just check if the distance is less than the sum of the size of the two objects
                 return dis_diff.length_squared() <= (self.size.x+ other.size.x) * (self.size.y + other.size.y)
             
+            # Walls/Spaceship
+            # Python has no fall-through switch case :(
+            case GameObjectType.SPACESHIP:
+                projected_dist = (self.position - other.position).dot(other.normal)
+                return projected_dist < 0
+                
+            
             case _: # If nothing matches, no collision!
                 return False
     
@@ -49,6 +56,10 @@ class Player(GameObject_Physics_Base):
                 self.canvas.delete(other.canvas_object) # Remove star
                 other.canvas_object = None
                 # Increase energy!
+
+            case GameObjectType.SPACESHIP:
+                direction = (self.position - other.normal).normalized()
+                self.velocity = -self.velocity.absolute_vector() * direction * WALL_VELOCITY_DIMINISH_MULTIPLIER
 
             case _:
                 pass # do nothing

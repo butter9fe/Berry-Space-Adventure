@@ -7,6 +7,7 @@ CANVAS_Y_STARTOFFSET = 0.1 # Beginning position of canvas in Y direction
 # Physics
 GRAVITY = 0.01
 PLAYER_SHOOT_STRENGTH = 0.01
+WALL_VELOCITY_DIMINISH_MULTIPLIER = 0.6
 
 # Game
 MAX_STARS = 10 # Maximum stars that are on-screen at a time
