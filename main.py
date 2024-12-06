@@ -16,7 +16,7 @@ sounds().play_audio("./assets/bgm/bushw_conquer.wav", delay=0)
 def main():
     # Setting up the window
     root = tk.Tk() # Create a window
-    root.title("Berry's Space Adventure!") # Title of application
+    root.title("Berry's Starlight Odyssey!") # Title of application
     root.iconbitmap('./assets/favicon.ico') # Set icon of application
     root.resizable(False, False) # Prevent window from being resized
     root.state('zoomed') # Maximize window

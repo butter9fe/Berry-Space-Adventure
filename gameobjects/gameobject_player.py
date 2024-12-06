@@ -5,14 +5,14 @@ from gameobjects.gameobject_physics_base import *
 
 class Player(GameObject_Physics_Base):
     # Constants
-    PLAYER_RADIUS = 25
+    PLAYER_SIZE = 25
 
     def __init__(self, canvas: tk.Canvas, spawn_x: int, spawn_y: int):
-        super().__init__(GameObjectType.PLAYER, canvas, Vector2(spawn_x, spawn_y))
+        super().__init__(GameObjectType.PLAYER, canvas, Vector2(spawn_x, spawn_y), Vector2(Player.PLAYER_SIZE, Player.PLAYER_SIZE))
 
     def draw(self) -> int:
-        top_left = self.position - Player.PLAYER_RADIUS
-        bot_right = self.position + Player.PLAYER_RADIUS
+        top_left = self.position - self.size
+        bot_right = self.position + self.size
         return self.canvas.create_oval(top_left.x, top_left.y, bot_right.x, bot_right.y, fill='yellow', outline='white')
     
     '''
@@ -20,12 +20,33 @@ class Player(GameObject_Physics_Base):
     Returns a boolean if this is True or False
     '''
     def check_collision(self, other: GameObject_Base) -> bool:
-        raise NotImplementedError(f"{self.__class__.__name__} does not implement check_collision()!") 
+        match other.go_type: # Switch case based on other object's type
+            # Star!
+            case GameObjectType.STAR:
+                dis_diff = other.position - self.position
+
+                # Perpendicular! Always return false 
+                if self.velocity.dot(dis_diff) <= 0:
+                    return False
+
+                # Else just check if the distance is less than the sum of the size of the two objects
+                return dis_diff.length_squared() <= (self.size.x+ other.size.x) * (self.size.y + other.size.y)
+            
+            case _: # If nothing matches, no collision!
+                return False
     
     '''
     After a collision has occured, this function is called to resolve the collision
     Basically, all the logic pertaining to what happens after a collision (gain score, velocity change, gain/lose hp, powerups, etc.) resides here!
     '''
-    def collision_response(self, other: GameObject_Base) -> bool:
-        raise NotImplementedError(f"{self.__class__.__name__} does not implement check_collision()!") 
+    def collision_response(self, other: GameObject_Base):
+        match other.go_type:
+            case GameObjectType.STAR:
+                self.elastic_collision(other)
+                self.canvas.delete(other.canvas_object) # Remove star
+                other.canvas_object = None
+                # Increase energy!
+
+            case _:
+                pass # do nothing
 

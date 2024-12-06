@@ -5,13 +5,28 @@ from gameobjects.gameobject_physics_base import *
 
 class Star(GameObject_Base):
     # Constants
-    STAR_RADIUS = 5
+    STAR_SIZE = 25
 
-    def __init__(self, canvas: tk.Canvas, spawn_x: int, spawn_y: int):
-        super().__init__(GameObjectType.STAR, canvas, Vector2(spawn_x, spawn_y))
+    def __init__(self, canvas: tk.Canvas, spawn_x: int, spawn_y: int, list_images: list[tk.PhotoImage]):
+        self.list_images = list_images
+        super().__init__(GameObjectType.STAR, canvas, Vector2(spawn_x, spawn_y), Vector2(Star.STAR_SIZE, Star.STAR_SIZE))
 
     def draw(self) -> int:
-        top_left = self.position - Star.STAR_RADIUS
-        bot_right = self.position + Star.STAR_RADIUS
-        return self.canvas.create_oval(top_left.x, top_left.y, bot_right.x, bot_right.y, fill='yellow', outline='black')
+        image_pos = self.position - self.size
 
+        star_img = tk.PhotoImage(file='./assets/star.png')
+        star_img = self.scale_image(star_img, self.size.x * 2)
+        self.list_images.append(star_img)
+
+        return self.canvas.create_image(image_pos.x, image_pos.y, image=star_img, anchor='nw')
+    
+    def update(self, time_scale):
+        # Despawn when far out of camera range
+        coords = self.canvas.coords(self.canvas_object)
+        canvasStart = self.canvas.canvasy(0)
+        canvasEnd = canvasStart + self.canvas.winfo_height()
+        tolerance = OFFSCREEN_SPAWN_MULTIPLIER * self.canvas.winfo_height() # Keep stars still that are half a screen away from player
+        
+        if coords[1] < canvasStart - tolerance or coords[1] > canvasEnd + tolerance:
+            self.canvas.delete(self.canvas_object)
+            self.canvas_object = None

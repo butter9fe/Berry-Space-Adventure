@@ -23,6 +23,13 @@ class Vector2():
     def normalized(self):
         return self / self.length()
     
+    def absolute_vector(self):
+        return Vector2(abs(self.x), abs(self.y))
+    
+    def cast_to_int_vector(self):
+        self.x = int(self.x)
+        self.y = int(self.y)
+    
     """
     Returns the length (magnitude) squared of vector
     Squared length is faster to calculate that square-root, so use this if you don't need the actual length
