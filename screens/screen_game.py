@@ -2,7 +2,6 @@
 # Modules
 import tkinter as tk
 import random as r
-
 # Classes
 from gameobjects.gameobject_base import GameObject_Base
 from gameobjects.gameobject_player import Player
@@ -11,9 +10,17 @@ from utils.timer import Timer
 from utils.vector2 import Vector2
 from constants import *
 
+from utils.audioplayer import SoundManager
+from utils.soundthreadmanager import sound_thread
+#sound_thread = SoundManager.get_sound_player_thread()
 class Game(tk.Canvas):
     def __init__(self, parent):
+<<<<<<< Updated upstream
         global bg_img # Required so GC doesn't delete the image due to no references
+=======
+        
+        global bg_img # Needed beause tkinter is funky and needs the image to be in same scope as mainloop
+>>>>>>> Stashed changes
 
         # Initialise variables
         screen_size = Vector2(parent.winfo_screenwidth(), parent.winfo_screenheight()) # Obtain size of root window
@@ -31,6 +38,7 @@ class Game(tk.Canvas):
         # TODO: Placeholder for now, replace with parallax effect that looks nicer if have time
         bg_img = tk.PhotoImage(file='./assets/spaceBG.png')
         self.bg = self.create_image(0, 0, image=bg_img, anchor='nw')
+
 
         # Create path from player to mouse, initialised to 0 first
         self.path = self.create_line(0, 0, 0, 0, fill="white", width=5)
@@ -109,9 +117,9 @@ class Game(tk.Canvas):
         # Shoot the player!
         absolute_mouse_pos = self.relative_to_absolute(Vector2(event.x, event.y)) # event provides us with position relative to widget position, but we want the world coordinates
         self.player.velocity = (self.player.position - absolute_mouse_pos) * PLAYER_SHOOT_STRENGTH
-
         # Hide path
         self.coords(self.path, 0, 0, 0, 0)
+        sound_thread.play_sfx("./assets/sounds/sample_collected_carrot2.wav")
 
     def on_click(self, event):
         print("Click")
@@ -124,6 +132,7 @@ class Game(tk.Canvas):
     def relative_to_absolute(self, relative_coords: Vector2) -> Vector2:
         return relative_coords + Vector2(self.canvasx(0), self.canvasy(0))
     
+<<<<<<< Updated upstream
     def get_random_pos(self, min_pos: Vector2, max_pos: Vector2, size: Vector2) -> Vector2:
         # Convert positions to integers
         min_pos.cast_to_int_vector()
@@ -194,3 +203,8 @@ class Game(tk.Canvas):
             self.game_objects.append(star)
             self.active_star_count += 1
     # endregion
+=======
+    def get_random_pos(self, min_pos: Vector2, max_pos: Vector2, scale: Vector2) -> Vector2:
+        return Vector2(r.randrange(min_pos.x, max_pos.x), r.randrange(min_pos.y, max_pos.y))
+    # endregion
+>>>>>>> Stashed changes
