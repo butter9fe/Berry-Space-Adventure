@@ -15,12 +15,7 @@ from utils.soundthreadmanager import sound_thread
 #sound_thread = SoundManager.get_sound_player_thread()
 class Game(tk.Canvas):
     def __init__(self, parent):
-<<<<<<< Updated upstream
         global bg_img # Required so GC doesn't delete the image due to no references
-=======
-        
-        global bg_img # Needed beause tkinter is funky and needs the image to be in same scope as mainloop
->>>>>>> Stashed changes
 
         # Initialise variables
         screen_size = Vector2(parent.winfo_screenwidth(), parent.winfo_screenheight()) # Obtain size of root window
@@ -132,7 +127,6 @@ class Game(tk.Canvas):
     def relative_to_absolute(self, relative_coords: Vector2) -> Vector2:
         return relative_coords + Vector2(self.canvasx(0), self.canvasy(0))
     
-<<<<<<< Updated upstream
     def get_random_pos(self, min_pos: Vector2, max_pos: Vector2, size: Vector2) -> Vector2:
         # Convert positions to integers
         min_pos.cast_to_int_vector()
@@ -203,8 +197,3 @@ class Game(tk.Canvas):
             self.game_objects.append(star)
             self.active_star_count += 1
     # endregion
-=======
-    def get_random_pos(self, min_pos: Vector2, max_pos: Vector2, scale: Vector2) -> Vector2:
-        return Vector2(r.randrange(min_pos.x, max_pos.x), r.randrange(min_pos.y, max_pos.y))
-    # endregion
->>>>>>> Stashed changes
