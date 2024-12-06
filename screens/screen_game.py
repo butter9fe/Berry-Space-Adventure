@@ -12,15 +12,10 @@ from constants import *
 
 from utils.audioplayer import SoundManager
 from utils.soundthreadmanager import sound_thread
-#sound_thread = SoundManager.get_sound_player_thread()
+
 class Game(tk.Canvas):
     def __init__(self, parent):
-<<<<<<< Updated upstream
         global bg_img # Required so GC doesn't delete the image due to no references
-=======
-        
-        global bg_img # Needed beause tkinter is funky and needs the image to be in same scope as mainloop
->>>>>>> Stashed changes
 
         # Initialise variables
         screen_size = Vector2(parent.winfo_screenwidth(), parent.winfo_screenheight()) # Obtain size of root window
@@ -86,6 +81,7 @@ class Game(tk.Canvas):
             # Check for collisions with player
             if (self.player.check_collision(go)):
                 self.player.collision_response(go)
+                
 
             # Remove dead gameobjects
             if (go.canvas_object == None):
@@ -105,6 +101,7 @@ class Game(tk.Canvas):
     def on_mouse_down(self, event):
         # Set flag
         self.mouse_down = True
+        sound_thread.play_sfx("./assets/sounds/sample_launch_prep.wav")
         # Begin slow-mo
         self.timer.update_timescale(0.5)
 
@@ -119,7 +116,7 @@ class Game(tk.Canvas):
         self.player.velocity = (self.player.position - absolute_mouse_pos) * PLAYER_SHOOT_STRENGTH
         # Hide path
         self.coords(self.path, 0, 0, 0, 0)
-        sound_thread.play_sfx("./assets/sounds/sample_collected_carrot2.wav")
+        sound_thread.play_sfx("./assets/sounds/sample_launch_able.wav")
 
     def on_click(self, event):
         print("Click")
@@ -132,7 +129,6 @@ class Game(tk.Canvas):
     def relative_to_absolute(self, relative_coords: Vector2) -> Vector2:
         return relative_coords + Vector2(self.canvasx(0), self.canvasy(0))
     
-<<<<<<< Updated upstream
     def get_random_pos(self, min_pos: Vector2, max_pos: Vector2, size: Vector2) -> Vector2:
         # Convert positions to integers
         min_pos.cast_to_int_vector()
@@ -203,8 +199,3 @@ class Game(tk.Canvas):
             self.game_objects.append(star)
             self.active_star_count += 1
     # endregion
-=======
-    def get_random_pos(self, min_pos: Vector2, max_pos: Vector2, scale: Vector2) -> Vector2:
-        return Vector2(r.randrange(min_pos.x, max_pos.x), r.randrange(min_pos.y, max_pos.y))
-    # endregion
->>>>>>> Stashed changes

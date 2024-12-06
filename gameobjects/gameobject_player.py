@@ -2,6 +2,8 @@ import tkinter as tk
 
 from utils.vector2 import Vector2
 from gameobjects.gameobject_physics_base import * 
+from utils.audioplayer import SoundManager
+from utils.soundthreadmanager import sound_thread
 
 class Player(GameObject_Physics_Base):
     # Constants
@@ -42,6 +44,7 @@ class Player(GameObject_Physics_Base):
     def collision_response(self, other: GameObject_Base):
         match other.go_type:
             case GameObjectType.STAR:
+                sound_thread.play_sfx("./assets/sounds/sample_collected_star.wav")
                 self.elastic_collision(other)
                 self.canvas.delete(other.canvas_object) # Remove star
                 other.canvas_object = None
