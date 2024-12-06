@@ -41,7 +41,7 @@ class Game(tk.Canvas):
         # Create stars
         global star_images # Required so GC doesn't delete the images due to no references
         star_images = []
-        self.spawn_stars()
+        #self.spawn_stars()
 
         # Begin update loop
         # Only after all objects have been created
@@ -124,24 +124,72 @@ class Game(tk.Canvas):
     def relative_to_absolute(self, relative_coords: Vector2) -> Vector2:
         return relative_coords + Vector2(self.canvasx(0), self.canvasy(0))
     
-    def get_random_pos(self, min_pos: Vector2, max_pos: Vector2) -> Vector2:
+    def get_random_pos(self, min_pos: Vector2, max_pos: Vector2, size: Vector2) -> Vector2:
+        # Convert positions to integers
         min_pos.cast_to_int_vector()
         max_pos.cast_to_int_vector()
-        return Vector2(r.randrange(min_pos.x, max_pos.x), r.randrange(min_pos.y, max_pos.y))
+        
+        # Invalid range
+        if (min_pos.x >= max_pos.x or min_pos.y >= max_pos.y):
+            return None
+
+        # Initialise variables
+        pos = Vector2()
+        valid_pos = False
+        attempts = 0 # Prevent infinite loop
+
+        # Find a valid random position
+        while not valid_pos and attempts < MAX_RANDOM_ATTEMPTS:
+            pos = Vector2(r.randrange(min_pos.x, max_pos.x), r.randrange(min_pos.y, max_pos.y))
+            attempts += 1
+
+            # Check for intersection with player
+            player_dist_sq = self.player.position.distance_squared(pos)
+            player_min_dist_sq = size + self.player.size.x + MIN_GAP_BTW_OBJS
+            if (player_dist_sq < player_min_dist_sq):
+                no_intersects = False
+                continue # Continue with while loop and regenerate position, no need to check other objects
+
+            # Check for intersections with other game objects
+            no_intersects = True
+            for go in self.game_objects:
+                dist_sq = go.position.distance_squared(pos)
+                min_dist_sq = size + go.size.x + MIN_GAP_BTW_OBJS
+                if (dist_sq < min_dist_sq): # Intersect found!
+                    no_intersects = False
+                    break  # No need to continue looping through list
+
+            # No intersects found! Break while loop
+            if no_intersects:
+                valid_pos = True
+
+        return pos if valid_pos else None
     
     def spawn_stars(self):
         stars_to_spawn = MAX_STARS - self.active_star_count
-        if (stars_to_spawn < 1): # No stars to spawn needed! Terminate function early
+        if (stars_to_spawn < 1): # No stars to spawn! Terminate function early
             return
 
-        # Get current window position in canvas
-        window_top_pos = Vector2(0, self.canvasy(0))
-        window_bot_pos = Vector2(self.canvas_size.x, self.canvasy(0) + self.winfo_height() * (1 + OFFSCREEN_SPAWN_MULTIPLIER))
+        # Get spawn boundary for stars, by default it is the window's current place in the canvas
+        spawn_top_bound = Vector2(0, self.canvasy(0))
+        spawn_bot_bound = Vector2(self.canvas_size.x, self.canvasy(0) + self.winfo_height())
 
-        print(window_top_pos.y, window_bot_pos.y)
+        # Update spawn boundary based on how player is moving
+        if (self.player.velocity.y > 0.1): # Moving down
+            if (spawn_bot_bound.y < self.canvas_size.y): # If window has not reached the bottom, spawn off-screen
+                spawn_top_bound.y = spawn_bot_bound.y # Top boundary is bottom of window
+            spawn_bot_bound.y = min(spawn_bot_bound.y + self.winfo_height() * OFFSCREEN_SPAWN_MULTIPLIER, self.canvas_size.y) # Bottom boundary is below the window by the offscreen multiplier, capped to the canvas size
 
+        else: # Either moving up/stationary
+            if (self.player.velocity.y < -0.1 and spawn_top_bound.y > 0): # If player is moving up, and window has not reached the top, spawn off-screen
+                spawn_bot_bound.y = spawn_top_bound.y # Bottom boundary is top of window
+            spawn_top_bound.y = max(spawn_top_bound.y - self.winfo_height() * OFFSCREEN_SPAWN_MULTIPLIER, 0) # Top boundary is above the window by the offscreen multiplier, capped to 0
+
+        # Spawn stars
         for _ in range(stars_to_spawn):
-            pos = self.get_random_pos(window_top_pos, window_bot_pos) # Spawn within confines of what is visible + half a screen away
+            pos = self.get_random_pos(spawn_top_bound, spawn_bot_bound, Star.STAR_SIZE * 2)
+            if (pos == None):
+                return
             star = Star(self, pos.x, pos.y, star_images)
             self.game_objects.append(star)
             self.active_star_count += 1
