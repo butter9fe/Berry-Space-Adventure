@@ -23,7 +23,7 @@ def main():
     root.state('zoomed') # Maximize window
 
     # Play background music (BGM)
-    sound_thread.play_bgm("./assets/sounds/sample_collected_missile.wav")
+    sound_thread.play_bgm("./assets/sounds/bgm/game_open.wav")
 
     # Set up screens
     screen_game = Game(root)

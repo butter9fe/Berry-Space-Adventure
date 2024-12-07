@@ -51,13 +51,14 @@ class Player(GameObject_Physics_Base):
     def collision_response(self, other: GameObject_Base):
         match other.go_type:
             case GameObjectType.STAR:
-                sound_thread.play_sfx("./assets/sounds/sample_collected_star.wav")
+                sound_thread.play_sfx("./assets/sounds/sfx/item_star.wav")
                 self.elastic_collision(other)
                 self.canvas.delete(other.canvas_object) # Remove star
                 other.canvas_object = None
                 # Increase energy!
 
             case GameObjectType.SPACESHIP:
+                sound_thread.play_sfx("./assets/sounds/sfx/item_spaceship.wav")
                 direction = (self.position - other.normal).normalized()
                 self.velocity = -self.velocity.absolute_vector() * direction * WALL_VELOCITY_DIMINISH_MULTIPLIER
 

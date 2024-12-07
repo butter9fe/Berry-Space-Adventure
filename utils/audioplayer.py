@@ -13,7 +13,7 @@ class SoundManager(threading.Thread):
         
         # Set up BGM player
         self.bgm_player = QMediaPlayer()
-        self.bgm_player.setVolume(20)  # Set the initial volume (0-100)
+        self.bgm_player.setVolume(50)  # Set the initial volume (0-100)
         self.current_bgm = None
         
         # Set up SFX player

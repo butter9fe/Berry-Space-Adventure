@@ -104,7 +104,7 @@ class Game(tk.Canvas):
     def on_mouse_down(self, event):
         # Set flag
         self.mouse_down = True
-        sound_thread.play_sfx("./assets/sounds/sample_launch_prep.wav")
+        sound_thread.play_sfx("./assets/sounds/sfx/launch_prep.wav")
         # Begin slow-mo
         self.timer.update_timescale(0.5)
 
@@ -119,10 +119,11 @@ class Game(tk.Canvas):
         self.player.velocity = (self.player.position - absolute_mouse_pos) * PLAYER_SHOOT_STRENGTH
         # Hide path
         self.coords(self.path, 0, 0, 0, 0)
-        sound_thread.play_sfx("./assets/sounds/sample_launch_able.wav")
+        sound_thread.play_sfx("./assets/sounds/sfx/launch_able.wav")
 
     def on_click(self, event):
         print("Click")
+        sound_thread.play_sfx("./assets/sounds/sfx/menu_button_click.wav")
     # endregion
 
     # region Utility Functions
