@@ -13,8 +13,6 @@ from screens.hud import HUD
 from utils.timer import Timer
 from utils.vector2 import Vector2
 from constants import *
-
-from utils.audioplayer import SoundManager
 from utils.soundthreadmanager import sound_thread
 
 class Game(tk.Canvas):
@@ -111,14 +109,14 @@ class Game(tk.Canvas):
     # region Events
     def on_mouse_down(self, event):
         if self.player.energy.get() < ENERGY_TO_JUMP:
-            # Play unable to jump SFX!
+            sound_thread.play_sfx("./assets/sounds/sfx/launch_unable.wav") #Play sfx: Prepare to jump
             return # Don't jump
 
         # Set flag
         self.mouse_down = True
-        sound_thread.play_sfx("./assets/sounds/sfx/launch_prep.wav")
         # Begin slow-mo
         self.timer.update_timescale(0.5)
+        sound_thread.play_sfx("./assets/sounds/sfx/launch_prep.wav") #Play sfx: Prepare to jump
 
     def on_mouse_up(self, event):
         if self.mouse_down == False: # Was not preparing to jump, ie no energy
@@ -136,11 +134,11 @@ class Game(tk.Canvas):
         self.player.velocity = (self.player.position - absolute_mouse_pos) * PLAYER_SHOOT_STRENGTH
         # Hide path
         self.coords(self.path, 0, 0, 0, 0)
-        sound_thread.play_sfx("./assets/sounds/sfx/launch_able.wav")
+        sound_thread.play_sfx("./assets/sounds/sfx/launch_able.wav") #Play sfx: Launch able
 
     def on_click(self, event):
         print("Click")
-        sound_thread.play_sfx("./assets/sounds/sfx/menu_button_click.wav")
+        sound_thread.play_sfx("./assets/sounds/sfx/menu_button_click.wav") #Play sfx: Button click
     # endregion
 
     # region Utility Functions

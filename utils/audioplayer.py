@@ -7,25 +7,33 @@ import threading
 class SoundManager(threading.Thread):
     def __init__(self):
         # Initialize PyQt Application (needed to run multimedia functions)
-        super().__init__()
-        self.app = QApplication(sys.argv)
-        self.bgm_player = QMediaPlayer()
-        
-        # Set up BGM player
-        self.bgm_player = QMediaPlayer()
-        self.bgm_player.setVolume(50)  # Set the initial volume (0-100)
-        self.current_bgm = None
-        
-        # Set up SFX player
-        self.sfx_player = QSoundEffect()
-        self.sfx_player.setVolume(1.0)  # Full volume for SFX
+        if not hasattr(self, "initialized"):
+            self.initialized = True  # Prevent re-initialization
+            super().__init__()
+            self.app = QApplication(sys.argv)
+            
+            # Set up BGM player
+            self.bgm_player = QMediaPlayer()
+            self.bgm_player.setVolume(50)  # Set the initial volume (0-100)
+            self.current_bgm = None
+            
+            # Set up SFX player
+            self.sfx_player = QSoundEffect()
+            self.sfx_player.setVolume(1.0)  # Full volume for SFX
 
-        # Connect to mediaStatusChanged signal to loop BGM
-        self.bgm_player.mediaStatusChanged.connect(self.check_bgm_status)
+            # Connect to mediaStatusChanged signal to loop BGM
+            self.bgm_player.mediaStatusChanged.connect(self.check_bgm_status)
         
     def run(self): # this is a threading subclass thingy that just gets called wwhen the thread starts
         # Keep the PyQt5 event loop running in this thread
         self.app.exec_()
+    def get_sound_player_thread(): # Obtain single instance of sound player thread
+        instance = SoundManager()
+        if not instance.is_alive():
+            instance.start()
+        return instance
+    
+
     def play_bgm(self, bgm_file):
         """Play background music, interrupt only by calling this method again"""
         if self.current_bgm != bgm_file:  # Check if the same bgm is not playing
