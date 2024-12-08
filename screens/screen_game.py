@@ -8,6 +8,7 @@ from gameobjects.gameobject_base import GameObject_Base
 from gameobjects.gameobject_player import Player
 from gameobjects.gameobject_star import Star
 from gameobjects.gameobject_spaceship import Spaceship
+from screens.hud import HUD
 
 from utils.timer import Timer
 from utils.vector2 import Vector2
@@ -54,6 +55,10 @@ class Game(tk.Canvas):
         self.timer = Timer()
         self.timer.update_timer(parent, self.update)
 
+        # Initialise hud
+        self.hud = HUD(self, self.player)
+        self.hud.pack()
+
         # Event bindings
         self.bind('<ButtonPress-1>', self.on_mouse_down)
         self.bind('<ButtonRelease-1>', self.on_mouse_up)
@@ -95,13 +100,20 @@ class Game(tk.Canvas):
         # Continuously spawn new stars if we go below the maximum
         self.spawn_stars()
 
-        # Update path if mouse is down
         if self.mouse_down:
+            # Update path if mouse is down
             absolute_mouse_pos = self.relative_to_absolute(Vector2(self.winfo_pointerx() - self.winfo_rootx(), self.winfo_pointery() - self.winfo_rooty()))
             self.coords(self.path, self.player.position.x, self.player.position.y, absolute_mouse_pos.x, absolute_mouse_pos.y)
 
+            # Also deplete energy
+            self.player.modify_energy(-ENERGY_DEPLETION)
+
     # region Events
     def on_mouse_down(self, event):
+        if self.player.energy.get() < ENERGY_TO_JUMP:
+            # Play unable to jump SFX!
+            return # Don't jump
+
         # Set flag
         self.mouse_down = True
         sound_thread.play_sfx("./assets/sounds/sfx/launch_prep.wav")
@@ -109,10 +121,15 @@ class Game(tk.Canvas):
         self.timer.update_timescale(0.5)
 
     def on_mouse_up(self, event):
+        if self.mouse_down == False: # Was not preparing to jump, ie no energy
+            return
+
         # Set flag
         self.mouse_down = False
         # End slow-mo
         self.timer.update_timescale(1.0)
+        # Deplete energy
+        self.player.modify_energy(-ENERGY_TO_JUMP)
 
         # Shoot the player!
         absolute_mouse_pos = self.relative_to_absolute(Vector2(event.x, event.y)) # event provides us with position relative to widget position, but we want the world coordinates
@@ -187,7 +204,7 @@ class Game(tk.Canvas):
         if (self.player.velocity.y > 0.1): # Moving down
             if (spawn_bot_bound.y < self.canvas_size.y): # If window has not reached the bottom, spawn off-screen
                 spawn_top_bound.y = spawn_bot_bound.y # Top boundary is bottom of window
-            spawn_bot_bound.y = min(spawn_bot_bound.y + self.winfo_height() * OFFSCREEN_SPAWN_MULTIPLIER, self.canvas_size.y) # Bottom boundary is below the window by the offscreen multiplier, capped to the canvas size
+            spawn_bot_bound.y = min(spawn_bot_bound.y + self.winfo_height() * OFFSCREEN_SPAWN_MULTIPLIER, self.canvas_size.y * 0.9) # Bottom boundary is below the window by the offscreen multiplier, capped to the canvas size
 
         else: # Either moving up/stationary
             if (self.player.velocity.y < -0.1 and spawn_top_bound.y > 0): # If player is moving up, and window has not reached the top, spawn off-screen
