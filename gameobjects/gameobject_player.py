@@ -4,6 +4,7 @@ from utils.vector2 import Vector2
 from gameobjects.gameobject_physics_base import * 
 from utils.audioplayer import SoundManager
 from utils.soundthreadmanager import sound_thread
+from utils.math_extensions import *
 
 class Player(GameObject_Physics_Base):
     # Constants
@@ -11,6 +12,8 @@ class Player(GameObject_Physics_Base):
 
     def __init__(self, canvas: tk.Canvas, spawn_x: int, spawn_y: int):
         super().__init__(GameObjectType.PLAYER, canvas, Vector2(spawn_x, spawn_y), Vector2(Player.PLAYER_SIZE, Player.PLAYER_SIZE))
+        self.energy = tk.DoubleVar(value=100)
+        self.health = 3
 
     def draw(self) -> int:
         top_left = self.position - self.size
@@ -52,16 +55,20 @@ class Player(GameObject_Physics_Base):
         match other.go_type:
             case GameObjectType.STAR:
                 sound_thread.play_sfx("./assets/sounds/sfx/item_star.wav")
-                self.elastic_collision(other)
+                self.elastic_collision(other) # Collision response
                 self.canvas.delete(other.canvas_object) # Remove star
                 other.canvas_object = None
-                # Increase energy!
+                self.modify_energy(ENERGY_GAIN_FROM_STAR) # Increase energy!
 
             case GameObjectType.SPACESHIP:
                 sound_thread.play_sfx("./assets/sounds/sfx/item_spaceship.wav")
                 direction = (self.position - other.normal).normalized()
                 self.velocity = -self.velocity.absolute_vector() * direction * WALL_VELOCITY_DIMINISH_MULTIPLIER
+                self.modify_energy(100 - self.energy.get()) # Set directly to 100
 
             case _:
                 pass # do nothing
+
+    def modify_energy(self, energy_to_add: float):
+        self.energy.set(clamp(self.energy.get() + energy_to_add, 0, 100))
 

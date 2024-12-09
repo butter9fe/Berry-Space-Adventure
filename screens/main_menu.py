@@ -3,9 +3,10 @@
 import tkinter as tk
 from tkinter import Tk, Label
 from PIL import Image, ImageTk
-
+from utils.soundthreadmanager import sound_thread
 
 class Launch:
+    sound_thread.play_bgm("./assets/sounds/bgm/game_open.wav") #Play Bgm: Opening Theme
     def __init__(self, image_path, duration=4000, next_window=None):
         # Create the main window
         self.root = Tk()
@@ -288,25 +289,27 @@ class MainMenu:
         self.root.after(delay, self.animate_background)
     
     def on_start_hover(self, event):
-        self.canvas.itemconfig(self.start_button_id, image=self.start_hover_photo)
-        self.canvas.config(cursor="hand2")
-    
+        self.start_button.configure(image=self.start_hover_photo)
+        sound_thread.play_sfx("./assets/sounds/sfx/menu_button_scrollpass.wav")  #Play sfx: button hover
+
     def on_start_leave(self, event):
         self.canvas.itemconfig(self.start_button_id, image=self.start_button_photo)
         self.canvas.config(cursor="")
     
     def on_quit_hover(self, event):
-        self.canvas.itemconfig(self.quit_button_id, image=self.quit_hover_photo)
-        self.canvas.config(cursor="hand2")
+        self.quit_button.configure(image=self.quit_hover_photo)
+        sound_thread.play_sfx("./assets/sounds/sfx/menu_button_scrollpass.wav") #Play sfx: button hover
     
     def on_quit_leave(self, event):
         self.canvas.itemconfig(self.quit_button_id, image=self.quit_button_photo)
         self.canvas.config(cursor="")
     
-    def on_start_click(self, event):
+    def on_start_click(self, event):                
+        sound_thread.play_sfx("./assets/sounds/sfx/menu_button_start.wav") #Play sfx: Start game press
         self.root.destroy()
     
-    def on_quit_click(self, event):
+    def on_quit_click(self, event):        
+        sound_thread.play_sfx("./assets/sounds/sfx/menu_button_quit.wav") #Play sfx: Quit game press
         self.root.quit()
     
     def show(self):

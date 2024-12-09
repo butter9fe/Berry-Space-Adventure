@@ -13,8 +13,10 @@ def main():
 
     # Initialise sound manager -SK
     global sound_manager
-    sound_manager = SoundManager()
-    sound_manager.start()
+    #sound_manager = SoundManager()
+    #sound_manager.start()
+    sound_thread = SoundManager.get_sound_player_thread()
+
 
     # Setting up the window
     root = tk.Tk() # Create a window
@@ -24,7 +26,7 @@ def main():
     root.state('zoomed') # Maximize window
 
     # Play background music (BGM)
-    sound_thread.play_bgm("./assets/sounds/bgm/game_open.wav")
+    sound_thread.play_bgm("./assets/sounds/bgm/game_space_lv1.wav")
 
     # Set up screens
     screen_game = Game(root)
