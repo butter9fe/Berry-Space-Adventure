@@ -29,9 +29,6 @@ class GameManager(object):
         self.root.resizable(False, False) # Prevent window from being resized
         self.root.state('zoomed') # Maximize window
 
-        # Play background music (BGM)
-        sound_thread.play_bgm("./assets/sounds/bgm/game_space_lv1.wav")
-
         # Set up screens
         self.next_level()
         self.root.mainloop() # run
@@ -43,6 +40,8 @@ class GameManager(object):
         match self.curr_level:
             case 2:
                 Game(self.root, self.curr_level, self.next_level, './assets/spaceBG_2.png')
+                sound_thread.play_bgm("./assets/sounds/bgm/game_space_lv2.wav") #Lv2 Music
 
             case _: # Default/Level 1
                 Game(self.root, self.curr_level, self.next_level)
+                sound_thread.play_bgm("./assets/sounds/bgm/game_space_lv1.wav") #Lv1 Music

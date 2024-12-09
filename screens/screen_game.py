@@ -134,6 +134,7 @@ class Game(tk.Canvas):
 
     def on_mouse_up(self, event):
         if self.mouse_down == False: # Was not preparing to jump, ie no energy
+            sound_thread.play_sfx("./assets/sounds/sfx/launch_unable.wav") #Play sfx: unable to jump
             return
 
         # Set flag
@@ -152,7 +153,6 @@ class Game(tk.Canvas):
 
     def on_click(self, event):
         print("Click")
-        sound_thread.play_sfx("./assets/sounds/sfx/menu_button_click.wav") #Play sfx: Button click
     # endregion
 
     # region Utility Functions
