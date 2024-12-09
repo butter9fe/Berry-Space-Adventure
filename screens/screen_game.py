@@ -17,7 +17,7 @@ from constants import *
 from utils.soundthreadmanager import sound_thread
 
 class Game(tk.Canvas):
-    def __init__(self, parent):
+    def __init__(self, parent, curr_level, next_level_callback, bg_img_path='./assets/spaceBG.png'):
         # Global image references so GC doesn't delete them due to nothing referencing them
         global bg_img
         global go_images
@@ -30,6 +30,8 @@ class Game(tk.Canvas):
         self.mouse_down = False # Flag to check if mouse is pressed
         self.game_objects : list[GameObject_Base] = [] # List of game objects
         self.active_star_count = 0
+        self.curr_level = curr_level # Current level integer, used to do conditional stuff, can check for dialogues here
+        self.next_level_callback = next_level_callback # Callback for going next level
 
         # Initialise canvas
         super().__init__(parent, background='black', bd=0, highlightthickness=0, scrollregion=(0, 0, self.canvas_size.x, self.canvas_size.y))
@@ -37,7 +39,7 @@ class Game(tk.Canvas):
 
         # Add space background
         # TODO: Placeholder for now, replace with parallax effect that looks nicer if have time
-        bg_img = tk.PhotoImage(file='./assets/spaceBG.png')
+        bg_img = tk.PhotoImage(file=bg_img_path)
         self.bg = self.create_image(0, 0, image=bg_img, anchor='nw')
 
         # Create boundaries
@@ -46,17 +48,18 @@ class Game(tk.Canvas):
 
         # Create ships
         self.game_objects.append(Spaceship(self, self.canvas_size.y - Spaceship.SHIP_HEIGHT, True, go_images)) # Beginning ship
+        self.game_objects.append(Spaceship(self, self.canvas_size.y * 0.1, False, go_images)) # End ship
 
         # Create path from player to mouse, initialised to 0 first
         self.path = self.create_line(0, 0, 0, 0, fill="white", width=5)
 
         # Create player
-        self.player = Player(self, self.canvas_size.x * 0.5, self.canvas_size.y * 0.97)
+        self.player = Player(self, self.canvas_size.x * 0.5, self.canvas_size.y * 0.95)
 
         # Begin update loop
         # Only after all objects have been created
         self.timer = Timer()
-        self.timer.update_timer(parent, self.update)
+        self.timer.update_timer(self, self.update)
 
         # Initialise hud
         self.hud = HUD(self, self.player)
@@ -110,8 +113,15 @@ class Game(tk.Canvas):
             # Also deplete energy
             self.player.modify_energy(-ENERGY_DEPLETION)
 
+    def load_next_level(self):
+        self.destroy()
+        self.next_level_callback()
+
     # region Events
     def on_mouse_down(self, event):
+        if self.player.has_end_game: # Reached the top! Don't allow anymore interactions
+            return
+
         if self.player.energy.get() < ENERGY_TO_JUMP:
             sound_thread.play_sfx("./assets/sounds/sfx/launch_unable.wav") #Play sfx: Prepare to jump
             return # Don't jump
@@ -210,10 +220,10 @@ class Game(tk.Canvas):
 
         else: # Either moving up/stationary
             if (self.player.velocity.y < -0.1 and spawn_top_bound.y > 0): # If player is moving up, and window has not reached the top, spawn off-screen
-                spawn_bot_bound.y = spawn_top_bound.y # Bottom boundary is top of window
+                spawn_bot_bound.y = max(spawn_top_bound.y, self.winfo_height() * 0.8) # Bottom boundary is top of window
             else:
                 spawn_bot_bound.y = min(spawn_bot_bound.y, self.canvas_size.y * 0.97) # If stationary, we don't want to spawn below spaceship
-            spawn_top_bound.y = max(spawn_top_bound.y - self.winfo_height() * OFFSCREEN_SPAWN_MULTIPLIER, 0) # Top boundary is above the window by the offscreen multiplier, capped to 0
+            spawn_top_bound.y = max(spawn_top_bound.y - self.winfo_height() * OFFSCREEN_SPAWN_MULTIPLIER, self.winfo_height() * 0.8) # Top boundary is above the window by the offscreen multiplier, capped to 0.1x of window height
 
         # Spawn stars
         for _ in range(stars_to_spawn):

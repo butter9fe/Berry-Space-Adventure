@@ -1,6 +1,6 @@
 # Just stores all the global constant variables lol
 # Canvas
-CANVAS_MULTIPLIER = 10 # How many times the canvas is bigger than the window
+CANVAS_MULTIPLIER = 8 # How many times the canvas is bigger than the window
 CANVAS_X_STARTOFFSET = 0.5 # Beginning position of canvas in X direction
 CANVAS_Y_STARTOFFSET = 0.1 # Beginning position of canvas in Y direction
 
@@ -10,7 +10,7 @@ PLAYER_SHOOT_STRENGTH = 0.015
 WALL_VELOCITY_DIMINISH_MULTIPLIER = 0.6
 ENERGY_DEPLETION = 0.1
 ENERGY_TO_JUMP = 30
-ENERGY_GAIN_FROM_STAR = 60
+ENERGY_GAIN_FROM_STAR = 75
 
 # Game
 MAX_STARS = 10 # Maximum stars that are on-screen at a time

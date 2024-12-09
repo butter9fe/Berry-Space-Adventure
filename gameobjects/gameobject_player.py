@@ -7,6 +7,8 @@ from utils.audioplayer import SoundManager
 from utils.soundthreadmanager import sound_thread
 from utils.math_extensions import *
 
+from screens.dialogue_1 import Dialogue
+
 class Player(GameObject_Physics_Base):
     # Constants
     PLAYER_SIZE = 25
@@ -16,6 +18,8 @@ class Player(GameObject_Physics_Base):
         self.energy = tk.DoubleVar(value=100)
         self.health = tk.IntVar(value=3)
 
+        self.has_end_game = False
+
     def draw(self) -> int:
         top_left = self.position - self.size
         bot_right = self.position + self.size
@@ -24,15 +28,14 @@ class Player(GameObject_Physics_Base):
     def wall_collision_response(self, other: GameObject_Base):
         # Obtain opposite direction of player's current velocity to wall's normal
         direction = (self.velocity - other.normal).normalized()
+        bounce_velocity =  -self.velocity.absolute_vector() * direction
 
         # Ensure that we always bounce the player in the direction of the wall
         # This prevents the player from being stuck in the wall
         if other.normal.x != 0:
-            direction.x = m.copysign(direction.x, other.normal.x)
+            bounce_velocity.x = m.copysign(bounce_velocity.x, other.normal.x)
         if other.normal.y != 0:
-            direction.y = m.copysign(direction.y, -other.normal.y)
-
-        bounce_velocity =  -self.velocity.absolute_vector() * direction
+            bounce_velocity.y = m.copysign(bounce_velocity.y, other.normal.y)
 
         # Limit bounce velocity so you don't bounce back all the way
         bounce_velocity.x = clamp(bounce_velocity.x, -8, 8)
@@ -87,13 +90,29 @@ class Player(GameObject_Physics_Base):
                 self.wall_collision_response(other)
 
             case GameObjectType.SPACESHIP:
-                sound_thread.play_sfx("./assets/sounds/sfx/item_spaceship.wav")
-                self.wall_collision_response(other)
-                self.modify_energy(100 - self.energy.get()) # Set directly to 100
+                if other.is_active: # Start ship, acts as a "wall"
+                    sound_thread.play_sfx("./assets/sounds/sfx/item_spaceship.wav")
+                    self.wall_collision_response(other)
+                    self.velocity.y = min(self.velocity.y, -0.5) # Don't allow falling through the floor
+                    self.modify_energy(100 - self.energy.get()) # Set directly to 100
+
+                else: # End ship!
+                    # Reset velocity, clamping y as well
+                    self.velocity.x = 0
+                    self.velocity.y = -3
+
+                    self.has_end_game = True # Set end game
+                    other.is_active = True # Reenable collision for spaceship
+                    other.normal = Vector2(0, -1) # Set normal to be the same as start
+
+                    self.canvas.after(5, lambda: self.show_dialogue())
 
             case _:
                 pass # do nothing
 
     def modify_energy(self, energy_to_add: float):
         self.energy.set(clamp(self.energy.get() + energy_to_add, 0, 100))
+
+    def show_dialogue(self):
+        Dialogue(self.canvas)
 
