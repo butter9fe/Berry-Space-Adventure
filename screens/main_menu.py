@@ -6,7 +6,6 @@ from PIL import Image, ImageTk
 from utils.soundthreadmanager import sound_thread
 
 class Launch:
-    sound_thread.play_bgm("./assets/sounds/bgm/game_open.wav") #Play Bgm: Opening Theme
     def __init__(self, image_path, duration=4000, next_window=None):
         # Create the main window
         self.root = Tk()
@@ -323,9 +322,8 @@ def launch_menu():
 def show_second_gif():
     window2 = Launch("assets\menu\BSO_MG_StarSysIntro2.gif", duration=4000, next_window=launch_menu)
     window2.show()
-    # play like a computer startup sound here
 
 def launch_sequence():
+    sound_thread.play_bgm("./assets/sounds/bgm/game_open.wav") #Play Bgm: Opening Theme
     window1 = Launch("assets\menu\BSO_MG_StarSysIntro1.gif", duration=5000, next_window=show_second_gif)
-    window1.show()
-    # play like a computer startup sound here
+    window1.show()   
