@@ -35,9 +35,9 @@ class Game(tk.Canvas):
 
         # Initialise canvas
         super().__init__(parent, background='black', bd=0, highlightthickness=0, scrollregion=(0, 0, self.canvas_size.x, self.canvas_size.y))
-        padx = max((parent.winfo_screenwidth() - 1920) * 0.5, 0)
-        pady = max((parent.winfo_screenheight() - 1080) * 0.5, 0)
-        self.pack(expand = True, fill = 'both', padx=int(padx), pady=int(pady))
+        desired_pad_y = (parent.winfo_screenwidth()/1920) * 1080 # Get ratio of current width by 1920 and multiply by 1080 to get desired height scaled up
+        pady = max((parent.winfo_screenheight() - desired_pad_y) * 0.5, 0)
+        self.pack(expand = True, fill = 'both', pady=int(pady))
 
         # Add space background
         # TODO: Placeholder for now, replace with parallax effect that looks nicer if have time

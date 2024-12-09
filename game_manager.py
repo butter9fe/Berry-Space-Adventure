@@ -28,6 +28,7 @@ class GameManager(object):
         self.root.iconbitmap('./assets/favicon.ico') # Set icon of application
         self.root.resizable(False, False) # Prevent window from being resized
         self.root.state('zoomed') # Maximize window
+        self.root.configure(bg='black') # Set bg to black
 
         # Set up screens
         self.next_level()
