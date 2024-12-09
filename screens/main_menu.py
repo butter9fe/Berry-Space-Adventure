@@ -197,7 +197,8 @@ class MainMenu:
             padding_x,
             self.window_height - padding_y,
             image=self.berry_frames[0]['image'],
-            anchor='sw'
+            anchor='sw',
+            tags=("bunny_button",)
         )
         
         # Initialize frame counter for Berry animation
@@ -261,6 +262,7 @@ class MainMenu:
         self.canvas.tag_bind("quit_button", '<Enter>', self.on_quit_hover)
         self.canvas.tag_bind("quit_button", '<Leave>', self.on_quit_leave)
         self.canvas.tag_bind("quit_button", '<Button-1>', self.on_quit_click)
+        self.canvas.tag_bind("bunny_button", '<Button-1>', self.on_bunny_click)
         
         # Center window
         screen_width = self.root.winfo_screenwidth()
@@ -287,6 +289,39 @@ class MainMenu:
                    self.berry_frames[self.current_berry_frame]['delay'])
         self.root.after(delay, self.animate_background)
     
+    def on_bunny_click(self, event):        
+        self.NEW_BERRY_PATH = "assets/menu/xmas_bunny.gif" 
+        # Load and Xmas Bunny
+        self.berry_image = Image.open(self.NEW_BERRY_PATH)  
+        self.berry_frames = []
+
+        try:
+            while True:
+                frame = self.berry_image.copy()
+                berry_width = 320
+                berry_height = 180
+                frame = frame.resize((berry_width, berry_height), Image.Resampling.LANCZOS)
+                if frame.mode != 'RGBA':
+                    frame = frame.convert('RGBA')
+                photo = ImageTk.PhotoImage(frame)
+                self.berry_frames.append({
+                    'image': photo,
+                    'delay': self.berry_image.info.get('duration', 100) 
+                })
+                self.berry_image.seek(self.berry_image.tell() + 1)
+        except EOFError:
+            pass 
+        padding_x = 20
+        padding_y = 50
+        self.berry_animation_id = self.canvas.create_image(
+            padding_x,
+            self.window_height - padding_y,
+            image=self.berry_frames[0]['image'],
+            anchor='sw'
+        )
+        self.current_berry_frame = 0
+
+        sound_thread.play_bgm("./assets/sounds/bgm/game_space_lv2_Xmas.wav") #Xmas Music
     def on_start_hover(self, event):
         self.canvas.itemconfig(self.start_button_id, image=self.start_hover_photo)
         sound_thread.play_sfx("./assets/sounds/sfx/menu_button_scrollpass.wav")  #Play sfx: button hover
