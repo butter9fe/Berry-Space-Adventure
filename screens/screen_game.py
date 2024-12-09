@@ -134,11 +134,10 @@ class Game(tk.Canvas):
         self.mouse_down = True
         # Begin slow-mo
         self.timer.update_timescale(0.5)
-        sound_thread.play_sfx("./assets/sounds/sfx/launch_prep.wav") #Play sfx: Prepare to jump
+        #sound_thread.play_sfx("./assets/sounds/sfx/launch_prep.wav") #Play sfx: Prepare to jump
 
     def on_mouse_up(self, event):
         if self.mouse_down == False: # Was not preparing to jump, ie no energy
-            sound_thread.play_sfx("./assets/sounds/sfx/launch_unable.wav") #Play sfx: unable to jump
             return
 
         # Set flag

@@ -91,7 +91,7 @@ class Player(GameObject_Physics_Base):
 
             case GameObjectType.SPACESHIP:
                 if other.is_active: # Start ship, acts as a "wall"
-                    sound_thread.play_sfx("./assets/sounds/sfx/item_spaceship.wav")
+                    #sound_thread.play_sfx("./assets/sounds/sfx/item_spaceship.wav")
                     self.wall_collision_response(other)
                     self.velocity.y = min(self.velocity.y, -0.5) # Don't allow falling through the floor
                     self.modify_energy(100 - self.energy.get()) # Set directly to 100
