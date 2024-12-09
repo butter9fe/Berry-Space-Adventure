@@ -8,6 +8,7 @@ from gameobjects.gameobject_base import GameObject_Base
 from gameobjects.gameobject_player import Player
 from gameobjects.gameobject_star import Star
 from gameobjects.gameobject_spaceship import Spaceship
+from gameobjects.gameobject_wall import Wall
 from screens.hud import HUD
 
 from utils.timer import Timer
@@ -39,6 +40,10 @@ class Game(tk.Canvas):
         bg_img = tk.PhotoImage(file='./assets/spaceBG.png')
         self.bg = self.create_image(0, 0, image=bg_img, anchor='nw')
 
+        # Create boundaries
+        self.game_objects.append(Wall(self, True, go_images)) # Left wall
+        self.game_objects.append(Wall(self, False, go_images)) # Right wall
+
         # Create ships
         self.game_objects.append(Spaceship(self, self.canvas_size.y - Spaceship.SHIP_HEIGHT, True, go_images)) # Beginning ship
 
@@ -46,7 +51,7 @@ class Game(tk.Canvas):
         self.path = self.create_line(0, 0, 0, 0, fill="white", width=5)
 
         # Create player
-        self.player = Player(self, self.canvas_size.x * 0.5, self.canvas_size.y * 0.95)
+        self.player = Player(self, self.canvas_size.x * 0.5, self.canvas_size.y * 0.97)
 
         # Begin update loop
         # Only after all objects have been created
@@ -87,7 +92,6 @@ class Game(tk.Canvas):
             # Check for collisions with player
             if (self.player.check_collision(go)):
                 self.player.collision_response(go)
-                
 
             # Remove dead gameobjects
             if (go.canvas_object == None):
@@ -202,11 +206,13 @@ class Game(tk.Canvas):
         if (self.player.velocity.y > 0.1): # Moving down
             if (spawn_bot_bound.y < self.canvas_size.y): # If window has not reached the bottom, spawn off-screen
                 spawn_top_bound.y = spawn_bot_bound.y # Top boundary is bottom of window
-            spawn_bot_bound.y = min(spawn_bot_bound.y + self.winfo_height() * OFFSCREEN_SPAWN_MULTIPLIER, self.canvas_size.y * 0.9) # Bottom boundary is below the window by the offscreen multiplier, capped to the canvas size
+            spawn_bot_bound.y = min(spawn_bot_bound.y + self.winfo_height() * OFFSCREEN_SPAWN_MULTIPLIER, self.canvas_size.y * 0.97) # Bottom boundary is below the window by the offscreen multiplier, capped to the canvas size
 
         else: # Either moving up/stationary
             if (self.player.velocity.y < -0.1 and spawn_top_bound.y > 0): # If player is moving up, and window has not reached the top, spawn off-screen
                 spawn_bot_bound.y = spawn_top_bound.y # Bottom boundary is top of window
+            else:
+                spawn_bot_bound.y = min(spawn_bot_bound.y, self.canvas_size.y * 0.97) # If stationary, we don't want to spawn below spaceship
             spawn_top_bound.y = max(spawn_top_bound.y - self.winfo_height() * OFFSCREEN_SPAWN_MULTIPLIER, 0) # Top boundary is above the window by the offscreen multiplier, capped to 0
 
         # Spawn stars
