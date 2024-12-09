@@ -289,7 +289,7 @@ class MainMenu:
         self.root.after(delay, self.animate_background)
     
     def on_start_hover(self, event):
-        self.start_button.configure(image=self.start_hover_photo)
+        self.canvas.itemconfig(self.start_button_id, image=self.start_hover_photo)
         sound_thread.play_sfx("./assets/sounds/sfx/menu_button_scrollpass.wav")  #Play sfx: button hover
 
     def on_start_leave(self, event):
@@ -297,7 +297,7 @@ class MainMenu:
         self.canvas.config(cursor="")
     
     def on_quit_hover(self, event):
-        self.quit_button.configure(image=self.quit_hover_photo)
+        self.canvas.itemconfig(self.quit_button_id, image=self.quit_hover_photo)
         sound_thread.play_sfx("./assets/sounds/sfx/menu_button_scrollpass.wav") #Play sfx: button hover
     
     def on_quit_leave(self, event):

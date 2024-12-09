@@ -6,7 +6,7 @@ import threading
 
 class SoundManager(threading.Thread):
     def __init__(self):
-        # Initialize PyQt Application (needed to run multimedia functions)
+        # needed to run multimedia functions
         if not hasattr(self, "initialized"):
             self.initialized = True  # Prevent re-initialization
             super().__init__()
@@ -25,7 +25,6 @@ class SoundManager(threading.Thread):
             self.bgm_player.mediaStatusChanged.connect(self.check_bgm_status)
         
     def run(self): # this is a threading subclass thingy that just gets called wwhen the thread starts
-        # Keep the PyQt5 event loop running in this thread
         self.app.exec_()
     def get_sound_player_thread(): # Obtain single instance of sound player thread
         instance = SoundManager()
@@ -55,15 +54,13 @@ class SoundManager(threading.Thread):
 
     def check_bgm_status(self, status):
         """Check the status of the BGM to loop it"""
-        # If the BGM ends, restart it to loop
         if status == QMediaPlayer.EndOfMedia and self.current_bgm:
             self.play_bgm(self.current_bgm)
 
-# Example usage:
+# Example:
 '''
 # Play BGM
 SoundManager().play_bgm("./assets/sounds/space_lv1.wav")
-
 # Play sound effect
 SoundManager().play_sfx("./assets/sounds/menu_main.wav")
 # To stop BGM or change to another one
