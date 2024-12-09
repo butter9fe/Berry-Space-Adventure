@@ -2,6 +2,7 @@
 # Modules
 import tkinter as tk
 import random as r
+import math as m
 
 # Classes
 from gameobjects.gameobject_base import GameObject_Base
@@ -35,15 +36,14 @@ class Game(tk.Canvas):
 
         # Initialise canvas
         super().__init__(parent, background='black', bd=0, highlightthickness=0, scrollregion=(0, 0, self.canvas_size.x, self.canvas_size.y))
-        ratio = int(parent.winfo_screenwidth()/1920) # Get ratio of current screen width by default size of 1920
+        ratio = parent.winfo_screenwidth()/1920 # Get ratio of current screen width by default size of 1920
         desired_size_y = ratio * 1080 # Get desired height proportional to width
         pady = max((parent.winfo_screenheight() - desired_size_y) * 0.5, 0)
         self.pack(expand = True, fill = 'both', pady=int(pady))
 
         # Add space background
-        # TODO: Placeholder for now, replace with parallax effect that looks nicer if have time
         bg_img = tk.PhotoImage(file=bg_img_path)
-        bg_img = bg_img.zoom(ratio, ratio)
+        bg_img = bg_img.zoom(m.ceil(ratio), m.ceil(ratio))
         self.bg = self.create_image(0, 0, image=bg_img, anchor='nw')
 
         # Create boundaries
