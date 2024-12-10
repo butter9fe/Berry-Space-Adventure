@@ -25,7 +25,8 @@ class GameManager(object):
         self.root.title("Berry's Starlight Odyssey!") # Title of application
         self.root.iconbitmap('./assets/favicon.ico') # Set icon of application
         self.root.resizable(False, False) # Prevent window from being resized
-        self.root.state('zoomed') # Maximize window
+        #self.root.state('zoomed') # Maximize window
+        self.root.attributes("-fullscreen", True)
         self.root.configure(bg='black') # Set bg to black
 
         # Set up screens

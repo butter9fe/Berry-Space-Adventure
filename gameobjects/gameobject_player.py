@@ -17,7 +17,7 @@ class Player(GameObject_Physics_Base):
     def __init__(self, canvas: tk.Canvas, spawn_x: int, spawn_y: int):
         super().__init__(GameObjectType.PLAYER, canvas, Vector2(spawn_x, spawn_y), Vector2(Player.PLAYER_SIZE, Player.PLAYER_SIZE))
         self.energy = tk.DoubleVar(value=100)
-        self.health = tk.IntVar(value=3)
+        self.health = 3
 
         self.has_end_game = False
 
@@ -103,7 +103,7 @@ class Player(GameObject_Physics_Base):
                 self.elastic_collision(other) # Collision response
                 self.canvas.delete(other.canvas_object) # Remove spike
                 other.canvas_object = None
-                self.modify_hp(HEALTH_LOSE_FROM_SPIKE) # Decrease hp!
+                self.damage_hp(HEALTH_LOSE_FROM_SPIKE) # Decrease hp!
 
             case GameObjectType.WALL:
                 self.wall_collision_response(other)
@@ -138,9 +138,11 @@ class Player(GameObject_Physics_Base):
 
     def modify_energy(self, energy_to_add: float):
         self.energy.set(clamp(self.energy.get() + energy_to_add, 0, 100))
-    def modify_hp(self, health_to_minus: float):
-        self.health.set(clamp(self.energy.get() - health_to_minus, 0, 3))
-        if self.health.get() == 0:
+
+    def damage_hp(self, health_to_minus: float):
+        self.health = clamp(self.health - health_to_minus, 0, 3)
+        self.hp_update_callback()
+        if self.health == 0:
             self.has_end_game = True
 
     def show_dialogue(self):
