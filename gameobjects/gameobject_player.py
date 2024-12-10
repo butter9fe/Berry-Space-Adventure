@@ -6,7 +6,8 @@ from gameobjects.gameobject_physics_base import *
 from utils.audioplayer import SoundManager
 from utils.soundthreadmanager import sound_thread
 from utils.math_extensions import *
-
+from screens.dialogue_win import Dialogue_Win
+from screens.dialogue_lose import Dialogue_Lose
 from screens.dialogue_1 import Dialogue
 
 class Player(GameObject_Physics_Base):
@@ -143,5 +144,8 @@ class Player(GameObject_Physics_Base):
             self.has_end_game = True
 
     def show_dialogue(self):
-        Dialogue(self.canvas)
+        if self.canvas.curr_level==2:
+            Dialogue_Win(self.canvas)
+        else:    
+            Dialogue(self.canvas)
 

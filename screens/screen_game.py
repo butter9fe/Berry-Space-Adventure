@@ -35,6 +35,7 @@ class Game(tk.Canvas):
         self.active_spike_count = 0
         self.curr_level = curr_level # Current level integer, used to do conditional stuff, can check for dialogues here
         self.next_level_callback = next_level_callback # Callback for going next level
+        self.parent = parent
 
         # Initialise canvas
         super().__init__(parent, background='black', bd=0, highlightthickness=0, scrollregion=(0, 0, self.canvas_size.x, self.canvas_size.y))

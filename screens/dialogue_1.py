@@ -4,7 +4,6 @@ import tkinter as tk
 from tkinter import ttk, Label
 from PIL import Image, ImageTk
 from utils.soundthreadmanager import sound_thread
-from game_manager import GameManager as gm
 # Tbh idk how u wanna do this this is just placeholder feel free to refactor this or even delete this file lol
 # Call for this is under gameobject_player.py, under collision_response() and spaceship
 

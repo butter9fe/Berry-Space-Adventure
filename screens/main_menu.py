@@ -119,7 +119,7 @@ class MainMenu:
     TITLE_PATH = "assets/menu/BSO_Title_Logo.png"
     BACKGROUND_PATH = "assets/menu/BSO_Title_BGstarmoon.gif"
     BERRY_PATH = "assets\menu\BSO_Title_FloatBerry.gif"
-    RESTART_BUTTON_PATH = "assets/menu/BSO_Button_Restart.png"
+    RESTART_BUTTON_PATH = "assets/menu/BSO_Button_Qmark.png"
 
     def __init__(self):
         # Create the main window
