@@ -11,13 +11,13 @@ WALL_VELOCITY_DIMINISH_MULTIPLIER = 0.6
 ENERGY_DEPLETION = 0.1
 ENERGY_TO_JUMP = 30
 ENERGY_GAIN_FROM_STAR = 75
-ENERGY_LOSE_FROM_SPIKE = -10
 HEALTH_LOSE_FROM_SPIKE = -1
 
 # Game
 MAX_STARS = 10 # Maximum stars that are on-screen at a time
 STAR_FLOAT_SPEED = 0.2 # Up/Down floating speed
-MAX_SPIKE = 5 # Maximum spike that are on-screen at a time
+SPIKE_FLOAT_SPEED = 2 # Up/Down floating speed
+MAX_SPIKE = 6 # Maximum spike that are on-screen at a time
 MIN_GAP_BTW_OBJS = 10 # MInimum gap between game objects
 MAX_RANDOM_ATTEMPTS = 10 # Maximum number of attempts to generate a random position
 OFFSCREEN_SPAWN_MULTIPLIER = 0.25 # How far away from the canvas edge can things spawn, in relation to the window size
