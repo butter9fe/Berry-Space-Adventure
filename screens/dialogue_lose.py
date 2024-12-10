@@ -18,7 +18,7 @@ class Dialogue_Lose:
     def show_gif_1(self):
         window2 = Launch("assets\dialog\BSO_GO_GameOver.gif", 1920,1080 ,duration=5000,next_window=self.show_gif_18)
         window2.show()
-        sound_thread.play_bgm("./assets/sounds/sfx/game_station_3.wav") #Play sfx: Start game press
+        sound_thread.play_bgm("./assets/sounds/bgm/game_station_3.wav") #Play sfx: Start game press
     
     def show_gif_18(self):
         window2 = Launch("assets\dialog\BSO_MG_EndThankYou.gif", 1920,1080 ,duration=5000,next_window=lambda:sys.exit())
