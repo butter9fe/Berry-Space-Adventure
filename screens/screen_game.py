@@ -8,6 +8,7 @@ import math as m
 from gameobjects.gameobject_base import GameObject_Base
 from gameobjects.gameobject_player import Player
 from gameobjects.gameobject_star import Star
+from gameobjects.gameobject_spike import Spike
 from gameobjects.gameobject_spaceship import Spaceship
 from gameobjects.gameobject_wall import Wall
 from screens.hud import HUD
@@ -31,6 +32,7 @@ class Game(tk.Canvas):
         self.mouse_down = False # Flag to check if mouse is pressed
         self.game_objects : list[GameObject_Base] = [] # List of game objects
         self.active_star_count = 0
+        self.active_spike_count = 0
         self.curr_level = curr_level # Current level integer, used to do conditional stuff, can check for dialogues here
         self.next_level_callback = next_level_callback # Callback for going next level
 
@@ -106,8 +108,13 @@ class Game(tk.Canvas):
                 if (isinstance(go, Star)):
                     self.active_star_count -= 1
 
+                if (isinstance(go, Spike)):
+                    self.active_spike_count -= 1
+
         # Continuously spawn new stars if we go below the maximum
         self.spawn_stars()
+        if self.curr_level>=2:
+            self.spawn_spike()
 
         if self.mouse_down:
             # Update path if mouse is down
@@ -236,4 +243,36 @@ class Game(tk.Canvas):
             star = Star(self, pos.x, pos.y, go_images)
             self.game_objects.append(star)
             self.active_star_count += 1
+    # endregion
+
+    def spawn_spike(self):
+        spike_to_spawn = MAX_SPIKE - self.active_spike_count
+        if (spike_to_spawn < 1): # No Spike to spawn! Terminate function early
+            return
+
+        # Get spawn boundary for stars, by default it is the window's current place in the canvas
+        spawn_top_bound = Vector2(0, self.canvasy(0))
+        spawn_bot_bound = Vector2(self.canvas_size.x, self.canvasy(0) + self.winfo_height())
+
+        # Update spawn boundary based on how player is moving
+        if (self.player.velocity.y > 0.1): # Moving down
+            if (spawn_bot_bound.y < self.canvas_size.y): # If window has not reached the bottom, spawn off-screen
+                spawn_top_bound.y = spawn_bot_bound.y # Top boundary is bottom of window
+            spawn_bot_bound.y = min(spawn_bot_bound.y + self.winfo_height() * OFFSCREEN_SPAWN_MULTIPLIER, self.canvas_size.y * 0.97) # Bottom boundary is below the window by the offscreen multiplier, capped to the canvas size
+
+        else: # Either moving up/stationary
+            if (self.player.velocity.y < -0.1 and spawn_top_bound.y > 0): # If player is moving up, and window has not reached the top, spawn off-screen
+                spawn_bot_bound.y = max(spawn_top_bound.y, self.winfo_height() * 0.8) # Bottom boundary is top of window
+            else:
+                spawn_bot_bound.y = min(spawn_bot_bound.y, self.canvas_size.y * 0.97) # If stationary, we don't want to spawn below spaceship
+            spawn_top_bound.y = max(spawn_top_bound.y - self.winfo_height() * OFFSCREEN_SPAWN_MULTIPLIER, self.winfo_height() * 0.8) # Top boundary is above the window by the offscreen multiplier, capped to 0.1x of window height
+
+        # Spawn spike
+        for _ in range(spike_to_spawn):
+            pos = self.get_random_pos(spawn_top_bound, spawn_bot_bound, Spike.SPIKE_SIZE * 2)
+            if (pos == None):
+                return
+            spike = Spike(self, pos.x, pos.y, go_images)
+            self.game_objects.append(spike)
+            self.active_spike_count += 1
     # endregion

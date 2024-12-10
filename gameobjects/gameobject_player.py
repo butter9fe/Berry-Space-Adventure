@@ -60,6 +60,17 @@ class Player(GameObject_Physics_Base):
                 # Else just check if the distance is less than the sum of the size of the two objects
                 return dis_diff.length_squared() <= (self.size.x + other.size.x) * (self.size.y + other.size.y)
             
+            # Spike!
+            case GameObjectType.SPIKE:
+                dis_diff = other.position - self.position
+
+                # Perpendicular! Always return false 
+                if self.velocity.dot(dis_diff) <= 0:
+                    return False
+
+                # Else just check if the distance is less than the sum of the size of the two objects
+                return dis_diff.length_squared() <= (self.size.x + other.size.x) * (self.size.y + other.size.y)
+            
             # Walls/Spaceship
             case GameObjectType.WALL:
                 dis_diff = abs(other.position.x - self.position.x) # We don't care about y
@@ -85,6 +96,13 @@ class Player(GameObject_Physics_Base):
                 self.canvas.delete(other.canvas_object) # Remove star
                 other.canvas_object = None
                 self.modify_energy(ENERGY_GAIN_FROM_STAR) # Increase energy!
+
+            case GameObjectType.SPIKE:
+                sound_thread.play_sfx("./assets/sounds/sfx/item_spike.wav")
+                self.elastic_collision(other) # Collision response
+                self.canvas.delete(other.canvas_object) # Remove spike
+                other.canvas_object = None
+                self.modify_hp(HEALTH_LOSE_FROM_SPIKE) # Decrease hp!
 
             case GameObjectType.WALL:
                 self.wall_collision_response(other)
@@ -112,6 +130,10 @@ class Player(GameObject_Physics_Base):
 
     def modify_energy(self, energy_to_add: float):
         self.energy.set(clamp(self.energy.get() + energy_to_add, 0, 100))
+    def modify_hp(self, health_to_minus: float):
+        self.health.set(clamp(self.energy.get() - health_to_minus, 0, 3))
+        if self.health.get() == 0:
+            self.has_end_game = True
 
     def show_dialogue(self):
         Dialogue(self.canvas)

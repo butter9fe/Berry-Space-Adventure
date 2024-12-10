@@ -11,6 +11,7 @@ class GameObjectType(Enum):
     STAR = 2,
     SPACESHIP = 3,
     WALL = 4
+    SPIKE = 5,
 
 class GameObject_Base():
     def __init__(self, go_type: GameObjectType, canvas: tk.Canvas, position = Vector2(), size = Vector2(25, 25)):
