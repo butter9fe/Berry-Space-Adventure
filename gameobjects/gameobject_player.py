@@ -107,6 +107,12 @@ class Player(GameObject_Physics_Base):
             case GameObjectType.WALL:
                 self.wall_collision_response(other)
 
+                # Minimum velocity to bounce back in case we get stuck
+                if (self.normal.x == 1):
+                    self.velocity.x = min(self.velocity.x, 5)
+                elif (self.normal.x == -1):
+                    self.velocity.x = max(self.velocity.x, -5)
+
             case GameObjectType.SPACESHIP:
                 if other.is_active: # Start ship, acts as a "wall"
                     #sound_thread.play_sfx("./assets/sounds/sfx/item_spaceship.wav")
