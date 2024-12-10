@@ -22,7 +22,7 @@ class Dialogue:
         window2.show()
 
     def show_gif_4(self):
-        window2 = Launch("assets\dialog\BSO_MG_Text (14) (Bow).gif", duration=2000, next_window=self.show_gif_lv2)
+        window2 = Launch("assets\dialog\BSO_MG_Text (14) (Bow).png", duration=2000, next_window=self.show_gif_lv2)
         window2.show()
 
     def show_gif_3(self):
