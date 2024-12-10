@@ -108,9 +108,9 @@ class Player(GameObject_Physics_Base):
                 self.wall_collision_response(other)
 
                 # Minimum velocity to bounce back in case we get stuck
-                if (self.normal.x == 1):
+                if (other.normal.x == 1):
                     self.velocity.x = max(self.velocity.x, 5)
-                elif (self.normal.x == -1):
+                elif (other.normal.x == -1):
                     self.velocity.x = min(self.velocity.x, -5)
 
 
