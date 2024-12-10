@@ -165,9 +165,6 @@ class Game(tk.Canvas):
         #sound_thread.play_sfx("./assets/sounds/sfx/launch_able.wav") #Play sfx: Launch able
         # Update berry sprite to normal
         self.itemconfig(self.player.canvas_object, image=self.player.berry_img)
-
-    def on_click(self, event):
-        print("Click")
     # endregion
 
     # region Utility Functions
