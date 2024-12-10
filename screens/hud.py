@@ -50,9 +50,10 @@ class HUD(tk.Canvas):
         
         # Fill
         fill_padding = Vector2(35, 30)
-        top_left = Vector2(top_left_x, 5) + fill_padding
-        bot_right = Vector2(top_left_x + energy_frame_img.width(), energy_frame_img.height() + 1) - fill_padding
-        self.energy = self.create_rectangle(top_left.x, top_left.y, bot_right.x, bot_right.y, fill='#B8FFF1', outline='#B8FFF1')
+        self.energy_top_left = Vector2(top_left_x, 5) + fill_padding
+        self.energy_bot_right = Vector2(top_left_x + energy_frame_img.width(), energy_frame_img.height() + 1) - fill_padding
+        self.energy = self.create_rectangle(self.energy_top_left.x, self.energy_top_left.y, self.energy_bot_right.x, self.energy_bot_right.y, fill='#B8FFF1', outline='#B8FFF1')
+        player.energy_update_callback = lambda: self.on_energy_update(player)
 
         energy_frame_img = energy_frame_img.subsample(scale, scale) # Scale Energy to correct size
         hud_images.append(energy_frame_img) # store in global variable so GC doesn't delete our images
@@ -61,9 +62,14 @@ class HUD(tk.Canvas):
         self.pack()
 
     def on_health_update(self, player: Player):
-        print(player.health)
         for i in range(len(self.health)):
             if i < player.health:
                 self.itemconfig(self.health[i], state='normal')
             else:
                 self.itemconfig(self.health[i], state='hidden')
+
+    def on_energy_update(self, player: Player):
+        energy_width = self.energy_bot_right.x - self.energy_top_left.x
+        energy_ratio = player.energy / 100.0
+        new_right_x = self.energy_top_left.x + energy_width * energy_ratio
+        self.coords(self.energy, self.energy_top_left.x, self.energy_top_left.y, new_right_x, self.energy_bot_right.y)

@@ -16,7 +16,7 @@ class Player(GameObject_Physics_Base):
 
     def __init__(self, canvas: tk.Canvas, spawn_x: int, spawn_y: int):
         super().__init__(GameObjectType.PLAYER, canvas, Vector2(spawn_x, spawn_y), Vector2(Player.PLAYER_SIZE, Player.PLAYER_SIZE))
-        self.energy = tk.DoubleVar(value=100)
+        self.energy =100.0
         self.health = 3
 
         self.has_end_game = False
@@ -120,7 +120,7 @@ class Player(GameObject_Physics_Base):
                     #sound_thread.play_sfx("./assets/sounds/sfx/item_spaceship.wav")
                     self.wall_collision_response(other)
                     self.velocity.y = min(self.velocity.y, -0.5) # Don't allow falling through the floor
-                    self.modify_energy(100 - self.energy.get()) # Set directly to 100
+                    self.modify_energy(100 - self.energy) # Set directly to 100
 
                 else: # End ship!
                     # Reset velocity, clamping y as well
@@ -137,7 +137,8 @@ class Player(GameObject_Physics_Base):
                 pass # do nothing
 
     def modify_energy(self, energy_to_add: float):
-        self.energy.set(clamp(self.energy.get() + energy_to_add, 0, 100))
+        self.energy = clamp(self.energy + energy_to_add, 0, 100)
+        self.energy_update_callback()
 
     def damage_hp(self, health_to_minus: float):
         self.health = clamp(self.health - health_to_minus, 0, 3)

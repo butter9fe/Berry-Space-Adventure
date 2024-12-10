@@ -134,7 +134,7 @@ class Game(tk.Canvas):
         if self.player.has_end_game: # Reached the top! Don't allow anymore interactions
             return
 
-        if self.player.energy.get() < ENERGY_TO_JUMP:
+        if self.player.energy < ENERGY_TO_JUMP:
             sound_thread.play_sfx("./assets/sounds/sfx/launch_unable.wav") #Play sfx: Prepare to jump
             return # Don't jump
 
