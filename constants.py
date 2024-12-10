@@ -6,7 +6,7 @@ CANVAS_Y_STARTOFFSET = 0.1 # Beginning position of canvas in Y direction
 
 # Physics
 GRAVITY = 0.05
-PLAYER_SHOOT_STRENGTH = 0.115
+PLAYER_SHOOT_STRENGTH = 0.015
 WALL_VELOCITY_DIMINISH_MULTIPLIER = 0.6
 ENERGY_DEPLETION = 0.1
 ENERGY_TO_JUMP = 30
@@ -16,7 +16,7 @@ HEALTH_LOSE_FROM_SPIKE = -1
 
 # Game
 MAX_STARS = 10 # Maximum stars that are on-screen at a time
-STAR_FLOAT_SPEED = 0.1 # Up/Down floating speed
+STAR_FLOAT_SPEED = 0.2 # Up/Down floating speed
 MAX_SPIKE = 5 # Maximum spike that are on-screen at a time
 MIN_GAP_BTW_OBJS = 10 # MInimum gap between game objects
 MAX_RANDOM_ATTEMPTS = 10 # Maximum number of attempts to generate a random position

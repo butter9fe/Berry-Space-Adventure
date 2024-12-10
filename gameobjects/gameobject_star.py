@@ -35,7 +35,6 @@ class Star(GameObject_Base):
         self.canvas.move(self.canvas_object, 0, delta_y) # move based on delta
         self.position.y += delta_y # update variable
 
-
         # Despawn when far out of camera range
         coords = self.canvas.coords(self.canvas_object)
         canvasStart = self.canvas.canvasy(0)
