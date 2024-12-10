@@ -119,6 +119,7 @@ class MainMenu:
     TITLE_PATH = "assets/menu/BSO_Title_Logo.png"
     BACKGROUND_PATH = "assets/menu/BSO_Title_BGstarmoon.gif"
     BERRY_PATH = "assets\menu\BSO_Title_FloatBerry.gif"
+    RESTART_BUTTON_PATH = "assets/menu/BSO_Button_Restart.png"
 
     def __init__(self):
         # Create the main window
@@ -236,23 +237,34 @@ class MainMenu:
         quit_hover = Image.open(self.QUIT_BUTTON_HOVER_PATH)
         quit_hover = quit_hover.resize((button_width, button_height), Image.Resampling.LANCZOS)
         self.quit_hover_photo = ImageTk.PhotoImage(quit_hover)
+
+        restart_image = Image.open(self.RESTART_BUTTON_PATH)
+        restart_image = restart_image.resize((button_width, button_height), Image.Resampling.LANCZOS)
+        self.restart_button_photo = ImageTk.PhotoImage(restart_image)
         
         # Calculate button positions
         start_y = (self.window_height - (2 * button_height + 20)) // 2 + 50
         quit_y = start_y + button_height + 20
+        restart_y = quit_y + button_height + 20
         button_x = self.window_width // 2
         
         # Create buttons on canvas
         self.start_button_id = self.canvas.create_image(
-            button_x, start_y + button_height//2,
+            button_x, start_y + button_height//3,
             image=self.start_button_photo,
             tags=("start_button",)
         )
         
         self.quit_button_id = self.canvas.create_image(
-            button_x, quit_y + button_height//2,
+            button_x, quit_y + button_height//3,
             image=self.quit_button_photo,
             tags=("quit_button",)
+        )
+
+        self.restart_button_id = self.canvas.create_image(
+            button_x, restart_y + button_height//3,
+            image=self.restart_button_photo,
+            tags=("restart_button",)
         )
         
         # Bind canvas events
@@ -263,6 +275,8 @@ class MainMenu:
         self.canvas.tag_bind("quit_button", '<Leave>', self.on_quit_leave)
         self.canvas.tag_bind("quit_button", '<Button-1>', self.on_quit_click)
         self.canvas.tag_bind("bunny_button", '<Button-1>', self.on_bunny_click)
+        self.canvas.tag_bind("restart_button", '<Enter>', self.on_restart_hover)
+        self.canvas.tag_bind("restart_button", '<Button-1>', self.on_restart_click)
         
         # Center window
         screen_width = self.root.winfo_screenwidth()
@@ -322,6 +336,13 @@ class MainMenu:
         self.current_berry_frame = 0
 
         sound_thread.play_bgm("./assets/sounds/bgm/game_space_lv2_Xmas.wav") #Xmas Music
+    def on_restart_click(self, event):
+        self.canvas.itemconfig(self.restart_button_id, image=self.restart_button_photo)
+        sound_thread.play_bgm("./assets/sounds/bgm/menu_asset.wav")  #Play sfx: Restart 
+    def on_restart_hover(self, event):
+        self.canvas.itemconfig(self.restart_button_id, image=self.restart_button_photo)
+        sound_thread.play_sfx("./assets/sounds/sfx/menu_button_scrollpass.wav")  #Play sfx: button hover
+
     def on_start_hover(self, event):
         self.canvas.itemconfig(self.start_button_id, image=self.start_hover_photo)
         sound_thread.play_sfx("./assets/sounds/sfx/menu_button_scrollpass.wav")  #Play sfx: button hover
