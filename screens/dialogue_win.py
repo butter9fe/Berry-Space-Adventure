@@ -11,6 +11,7 @@ from utils.soundthreadmanager import sound_thread
 # You can check for self.game.curr_level to display different dialogues based on what level you are on
 class Dialogue_Win:
     def __init__(self, game):
+        sound_thread.play_bgm("./assets/sounds/bgm/game_station_3.wav") #Play sfx: Start game press
         self.game=game
         self.show_gif_1()
 
@@ -18,7 +19,6 @@ class Dialogue_Win:
     def show_gif_1(self):
         window2 = Launch("assets\dialog\BSO_MG_Text (21).png", duration=2000, next_window=self.show_gif_2)
         window2.show()
-        sound_thread.play_bgm("./assets/sounds/bgm/game_station_3.wav") #Play sfx: Start game press
     
     def show_gif_2(self):
         window2 = Launch("assets\dialog\BSO_MG_Text (22).png", duration=2000, next_window=self.show_gif_3)
