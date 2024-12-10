@@ -12,19 +12,26 @@ from screens.dialogue_1 import Dialogue
 
 class Player(GameObject_Physics_Base):
     # Constants
-    PLAYER_SIZE = 25
+    PLAYER_SIZE = 50
 
-    def __init__(self, canvas: tk.Canvas, spawn_x: int, spawn_y: int):
-        super().__init__(GameObjectType.PLAYER, canvas, Vector2(spawn_x, spawn_y), Vector2(Player.PLAYER_SIZE, Player.PLAYER_SIZE))
+    def __init__(self, canvas: tk.Canvas, spawn_x: int, spawn_y: int, list_images: list[tk.PhotoImage]):
         self.energy =100.0
         self.health = 3
+        self.list_images = list_images
+        super().__init__(GameObjectType.PLAYER, canvas, Vector2(spawn_x, spawn_y), Vector2(Player.PLAYER_SIZE, Player.PLAYER_SIZE))
 
         self.has_end_game = False
 
     def draw(self) -> int:
-        top_left = self.position - self.size
-        bot_right = self.position + self.size
-        return self.canvas.create_oval(top_left.x, top_left.y, bot_right.x, bot_right.y, fill='yellow', outline='white')
+        image_pos = self.position - self.size
+        self.berry_img = tk.PhotoImage(file='./assets/Game_Jam_Berry.png')
+        self.berry_img = self.scale_image(self.berry_img, self.size.x * 2)
+        self.berry_bubble_img = tk.PhotoImage(file='./assets/Game_Jam_BerryBubble.png')
+        self.berry_bubble_img = self.scale_image(self.berry_bubble_img, self.size.x * 2)
+        self.list_images.append(self.berry_img)
+        self.list_images.append(self.berry_bubble_img)
+
+        return self.canvas.create_image(image_pos.x, image_pos.y, image=self.berry_img, anchor='nw')
     
     def wall_collision_response(self, other: GameObject_Base):
         # Obtain opposite direction of player's current velocity to wall's normal
@@ -145,6 +152,7 @@ class Player(GameObject_Physics_Base):
         self.hp_update_callback()
         if self.health == 0:
             self.has_end_game = True
+            Dialogue_Lose(self.canvas)
 
     def show_dialogue(self):
         if self.canvas.curr_level==2:

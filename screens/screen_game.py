@@ -61,7 +61,7 @@ class Game(tk.Canvas):
         self.path = self.create_line(0, 0, 0, 0, fill="white", width=5)
 
         # Create player
-        self.player = Player(self, self.canvas_size.x * 0.5, self.canvas_size.y * 0.95)
+        self.player = Player(self, self.canvas_size.x * 0.5, self.canvas_size.y * 0.95, go_images)
 
         # Begin update loop
         # Only after all objects have been created
@@ -142,6 +142,8 @@ class Game(tk.Canvas):
         self.mouse_down = True
         # Begin slow-mo
         self.timer.update_timescale(0.5)
+        # Update berry sprite to bubble
+        self.itemconfig(self.player.canvas_object, image=self.player.berry_bubble_img)
         #sound_thread.play_sfx("./assets/sounds/sfx/launch_prep.wav") #Play sfx: Prepare to jump
 
     def on_mouse_up(self, event):
@@ -160,7 +162,9 @@ class Game(tk.Canvas):
         self.player.velocity = (self.player.position - absolute_mouse_pos) * PLAYER_SHOOT_STRENGTH
         # Hide path
         self.coords(self.path, 0, 0, 0, 0)
-        sound_thread.play_sfx("./assets/sounds/sfx/launch_able.wav") #Play sfx: Launch able
+        #sound_thread.play_sfx("./assets/sounds/sfx/launch_able.wav") #Play sfx: Launch able
+        # Update berry sprite to normal
+        self.itemconfig(self.player.canvas_object, image=self.player.berry_img)
 
     def on_click(self, event):
         print("Click")
