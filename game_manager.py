@@ -15,10 +15,8 @@ class GameManager(object):
         return cls.instance
 
     def __init__(self):
-        # Initialise sound manager -SK
+
         global sound_manager
-        #sound_manager = SoundManager()
-        #sound_manager.start()
         sound_thread = SoundManager.get_sound_player_thread()
         self.curr_level = 0
 

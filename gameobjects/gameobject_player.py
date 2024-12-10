@@ -98,7 +98,7 @@ class Player(GameObject_Physics_Base):
                 self.modify_energy(ENERGY_GAIN_FROM_STAR) # Increase energy!
 
             case GameObjectType.SPIKE:
-                sound_thread.play_sfx("./assets/sounds/sfx/item_spike.wav")
+                sound_thread.play_sfx("./assets/sounds/sfx/item_-hp.wav")
                 self.elastic_collision(other) # Collision response
                 self.canvas.delete(other.canvas_object) # Remove spike
                 other.canvas_object = None

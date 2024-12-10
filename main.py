@@ -11,7 +11,7 @@ from game_manager import GameManager
 
 # Main Loop. See https://www.geeksforgeeks.org/python-main-function/
 def main():
-   launch_sequence()
+   #launch_sequence()
    GameManager()
 
 # Start loop only if this file is ran directly

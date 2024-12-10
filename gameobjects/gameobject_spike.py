@@ -17,7 +17,7 @@ class Spike(GameObject_Base):
         else :
             spawn_x1=spawn_x-0.5*canvas.winfo_width()
 
-        self.max_float_offset = r.uniform(1, spawn_x1) #r.uniform(lower rad limit, upper rad limit)
+        self.max_float_offset = r.uniform(10, spawn_x1) #r.uniform(lower rad limit, upper rad limit)
         self.float_dir = r.randint(0, 1) * 2 - 1 # -1 or 1
         self.float_offset = self.float_dir * self.max_float_offset 
         super().__init__(GameObjectType.SPIKE, canvas, Vector2(spawn_x, spawn_y), Vector2(Spike.SPIKE_SIZE, Spike.SPIKE_SIZE))
