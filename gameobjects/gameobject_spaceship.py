@@ -17,6 +17,12 @@ class Spaceship(GameObject_Base):
         super().__init__(GameObjectType.SPACESHIP, canvas, Vector2(canvas.winfo_width() * 0.5, spawn_y - Spaceship.SHIP_HEIGHT), Vector2(canvas.winfo_width() * 0.5, Spaceship.SHIP_HEIGHT))
 
     def draw(self) -> int:
+        forcefield_img = tk.PhotoImage(file='./assets/BSO_MG_ForceField.png')
+        forcefield_img = self.scale_image(forcefield_img, self.canvas.winfo_width())
+        self.list_images.append(forcefield_img)
+        image_pos = Vector2(0, self.position.y + forcefield_img.height())
+        self.canvas.create_image(image_pos.x, image_pos.y, image=forcefield_img, anchor='nw')
+
         ship_img = tk.PhotoImage(file='./assets/sprite_ship.png')
         ship_img = self.scale_image(ship_img, self.size.y * 2, False)
         self.list_images.append(ship_img)

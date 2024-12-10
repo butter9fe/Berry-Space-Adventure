@@ -117,7 +117,7 @@ class MainMenu:
     QUIT_BUTTON_PATH = "assets/menu/BSO_Button_Quit.png"
     QUIT_BUTTON_HOVER_PATH = "assets/menu/BSO_Button_Quit_Hover.png"
     TITLE_PATH = "assets/menu/BSO_Title_Logo.png"
-    BACKGROUND_PATH = "assets/menu/BSO_Title_BGstarmoon.gif"
+    BACKGROUND_PATH = "assets/menu/BSO_Title_BG.png"
     BERRY_PATH = "assets\menu\BSO_Title_FloatBerry.gif"
     RESTART_BUTTON_PATH = "assets/menu/BSO_Button_Qmark.png"
 
@@ -177,8 +177,8 @@ class MainMenu:
         try:
             while True:
                 frame = self.berry_image.copy()
-                berry_width = 320
-                berry_height = 180
+                berry_width = 219
+                berry_height = 307
                 frame = frame.resize((berry_width, berry_height), Image.Resampling.LANCZOS)
                 if frame.mode != 'RGBA':
                     frame = frame.convert('RGBA')
@@ -304,7 +304,7 @@ class MainMenu:
         self.root.after(delay, self.animate_background)
     
     def on_bunny_click(self, event):        
-        self.NEW_BERRY_PATH = "assets/menu/xmas_bunny.gif" 
+        self.NEW_BERRY_PATH = "assets/menu/xmas_bunny.png" 
         # Load and Xmas Bunny
         self.berry_image = Image.open(self.NEW_BERRY_PATH)  
         self.berry_frames = []
@@ -312,8 +312,8 @@ class MainMenu:
         try:
             while True:
                 frame = self.berry_image.copy()
-                berry_width = 320
-                berry_height = 180
+                berry_width = 219
+                berry_height = 335
                 frame = frame.resize((berry_width, berry_height), Image.Resampling.LANCZOS)
                 if frame.mode != 'RGBA':
                     frame = frame.convert('RGBA')

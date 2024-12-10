@@ -16,7 +16,7 @@ class Dialogue_Win:
 
 
     def show_gif_1(self):
-        window2 = Launch("assets\dialog\BSO_MG_Text (21).png", duration=2000, next_window=self.show_gif_17)
+        window2 = Launch("assets\dialog\BSO_MG_Text (21).png", duration=2000, next_window=self.show_gif_2)
         window2.show()
         sound_thread.play_bgm("./assets/sounds/sfx/game_station_3.wav") #Play sfx: Start game press
     
