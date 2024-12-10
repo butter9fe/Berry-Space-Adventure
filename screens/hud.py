@@ -12,8 +12,8 @@ class HUD(tk.Canvas):
     def __init__(self, parent, player: Player):
         # Background image
         bg_img = tk.PhotoImage(file='./assets/BSO_Header.png')
-        ratio = int(bg_img.width()/parent.winfo_screenwidth())
-        bg_img.zoom(ratio, ratio)
+        ratio = int(parent.winfo_screenwidth()/bg_img.width())
+        bg_img.subsample(ratio, ratio)
 
         # Initialise canvas
         super().__init__(parent, bd=0, highlightthickness=0, width=parent.winfo_screenwidth(), height=bg_img.height(), bg='black')
